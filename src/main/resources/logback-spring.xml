@@ -1,0 +1,26 @@
+<configuration>
+    <!-- 引入 Spring Boot 默认的控制台/文件输出基础配置 -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <!--
+      pattern 中加入 [%X{traceId}]：
+      TraceContext 把当前请求标识写入 MDC，logback 会在该线程输出的每一条日志中渲染它；
+      没有请求上下文时显示为 []，不会为 null。
+    -->
+    <property name="CONSOLE_LOG_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) [%thread] [%X{traceId}] %logger{36} - %msg%n"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 应用自身代码打到 INFO；如需排查过滤器行为可把该包调到 DEBUG -->
+    <logger name="com.github.xingjianluo.springrequestobservabilityjava" level="INFO"/>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>
